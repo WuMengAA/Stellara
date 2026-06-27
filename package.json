@@ -1,0 +1,38 @@
+{
+  "name": "stellara-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@nuxtjs/sitemap": "^8.2.2",
+    "@pinia/nuxt": "^0.9.0",
+    "@prisma/client": "^6.1.0",
+    "bcryptjs": "^2.4.3",
+    "highlight.js": "^11.11.1",
+    "jose": "^5.9.0",
+    "markdown-it": "^14.2.0",
+    "nuxt": "^3.15.0",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/color-mode": "^3.5.0",
+    "@nuxtjs/tailwindcss": "^6.13.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/highlight.js": "^9.12.4",
+    "@types/markdown-it": "^14.1.2",
+    "nuxt-icon": "^0.6.10",
+    "prisma": "^6.1.0",
+    "typescript": "^5.7.0"
+  }
+}

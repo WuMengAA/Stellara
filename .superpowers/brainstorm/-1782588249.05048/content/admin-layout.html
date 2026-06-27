@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0b0e14;
+    color: #e2e4e9;
+    display: flex;
+    height: 100vh;
+  }
+  .sidebar {
+    width: 220px;
+    background: #11161f;
+    border-right: 1px solid #1e2430;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    padding: 8px 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e2e4e9;
+  }
+  .logo span {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+  }
+  .nav-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7e8494;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .15s;
+  }
+  .nav-item.active {
+    background: #a855f715;
+    color: #a855f7;
+  }
+  .nav-item:hover { color: #e2e4e9; }
+  .nav-group {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #4a5060;
+    padding: 16px 12px 6px;
+  }
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .topbar {
+    height: 56px;
+    border-bottom: 1px solid #1e2430;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  .page-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #7e8494;
+  }
+  .user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+  }
+  .content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #11161f;
+    border: 1px solid #1e2430;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .stat-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e2e4e9;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    color: #7e8494;
+    margin-top: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th { text-align: left; padding: 10px 12px; color: #7e8494; font-weight: 500; border-bottom: 1px solid #1e2430; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1e2430; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; background: #1e2430; color: #7e8494; }
+  .status-pub { color: #34d399; }
+  .status-draft { color: #fbbf24; }
+
+  .icon { opacity: 0.6; width: 16px; text-align: center; }
+  .spacer { flex: 1; }
+</style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo"><span>S</span> Stellara</div>
+
+    <div class="nav-item active">📊 Dashboard</div>
+
+    <div class="nav-group">Content</div>
+    <div class="nav-item">📝 Articles</div>
+    <div class="nav-item">🏷️ Tags</div>
+    <div class="nav-item">💬 Comments</div>
+
+    <div class="nav-group">System</div>
+    <div class="nav-item">👥 Users</div>
+    <div class="nav-item">⚙️ Settings</div>
+
+    <div class="spacer"></div>
+    <div class="nav-item" style="color: #f87171;">← Back to Blog</div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Dashboard</div>
+      <div class="user-badge">
+        <span>admin@stellara.dev</span>
+        <div class="user-avatar">A</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="stats">
+        <div class="stat-card"><div class="num">12</div><div class="label">Articles</div></div>
+        <div class="stat-card"><div class="num">8</div><div class="label">Tags</div></div>
+        <div class="stat-card"><div class="num">24</div><div class="label">Comments</div></div>
+        <div class="stat-card"><div class="num">3</div><div class="label">Users</div></div>
+      </div>
+
+      <table>
+        <tr><th>Title</th><th>Status</th><th>Views</th><th>Date</th></tr>
+        <tr><td>Getting Started with Nuxt 3</td><td><span class="status-pub">● Published</span></td><td>142</td><td>Jun 20</td></tr>
+        <tr><td>CSS Container Queries Guide</td><td><span class="status-pub">● Published</span></td><td>89</td><td>Jun 18</td></tr>
+        <tr><td>Draft: Prisma Deep Dive</td><td><span class="status-draft">● Draft</span></td><td>—</td><td>Jun 15</td></tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

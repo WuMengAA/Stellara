@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  name                  String
+  password              String?
+  apiKey                String?   @unique                        @map("api_key")
+  apiScopes             String?                                      @map("api_scopes")
+  avatar                String?
+  role                  String    @default("reader")
+  status                String    @default("active")
+  bio                   String    @default("")
+  tagline               String    @default("")
+  verificationStatus    String    @default("none")                @map("verification_status")
+  verificationRequested DateTime?                                 @map("verification_requested_at")
+  verificationApproved  DateTime?                                 @map("verification_approved_at")
+  nameStyle             String?                                   @map("name_style")
+  bioStyle              String?                                   @map("bio_style")
+  profileLayout         String?                                   @map("profile_layout")
+  preferences           String?
+  createdAt             DateTime  @default(now())                 @map("created_at")
+  updatedAt             DateTime  @default(now()) @updatedAt      @map("updated_at")
+
+  articles      Article[]
+  comments      Comment[]
+  tutorials     Tutorial[]
+  media         Media[]
+  notifications Notification[]
+  series        Series[]
+
+  @@map("users")
+}
+
+model Article {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  content        String
+  excerpt        String?
+  coverImage     String?                                        @map("cover_image")
+  authorId       String                                         @map("author_id")
+  categorySlug   String    @default("uncategorized")            @map("category_slug")
+  status         String    @default("draft")
+  viewCount      Int       @default(0)                          @map("view_count")
+  writtenAt      DateTime?                                      @map("written_at")
+  readingTime    Int?                                           @map("reading_time")
+  pinned         Boolean   @default(false)
+  allowComments  Boolean   @default(true)                       @map("allow_comments")
+  seoDescription String?                                        @map("seo_description")
+  createdAt      DateTime  @default(now())                      @map("created_at")
+  updatedAt      DateTime  @default(now()) @updatedAt           @map("updated_at")
+
+  author   User      @relation(fields: [authorId], references: [id])
+  tags     ArticleTag[]
+  comments Comment[]
+
+  @@map("articles")
+}
+
+model Tag {
+  slug        String   @id
+  name        String
+  description String?
+  color       String?
+  status      String   @default("active")
+  usageCount  Int      @default(0)                              @map("usage_count")
+  orderIdx    Int      @default(0)                              @map("order_idx")
+  createdAt   DateTime @default(now())                          @map("created_at")
+
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+model ArticleTag {
+  articleId String                                          @map("article_id")
+  tagSlug   String                                          @map("tag_slug")
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagSlug], references: [slug], onDelete: Cascade)
+
+  @@id([articleId, tagSlug])
+  @@map("article_tags")
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  articleId   String                                          @map("article_id")
+  userId      String?                                         @map("user_id")
+  authorName  String                                          @map("author_name")
+  authorEmail String?                                         @map("author_email")
+  content     String
+  parentId    String?                                         @map("parent_id")
+  likes       Int       @default(0)
+  hidden      Boolean   @default(false)
+  createdAt   DateTime  @default(now())                       @map("created_at")
+
+  article Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  parent  Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies Comment[] @relation("CommentReplies")
+
+  @@index([articleId])
+  @@index([parentId])
+  @@map("comments")
+}
+
+model Tutorial {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  icon        String    @default("star")
+  duration    Int       @default(5)
+  steps       String    @default("[]")
+  builtin     Boolean   @default(false)
+  createdBy   String?                                         @map("created_by")
+  createdAt   DateTime  @default(now())                       @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt            @map("updated_at")
+
+  creator User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@map("tutorials")
+}
+
+model Media {
+  id           String    @id @default(cuid())
+  filename     String
+  originalName String?                                        @map("original_name")
+  mimeType     String?                                        @map("mime_type")
+  size         Int?
+  type         String?
+  url          String
+  uploaderId   String?                                        @map("uploader_id")
+  isPublic     Boolean   @default(true)                       @map("is_public")
+  createdAt    DateTime  @default(now())                      @map("created_at")
+
+  uploader User? @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+
+  @@map("media")
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  type       String   // 'new_comment' | 'comment_reply' | 'article_published' | 'system'
+  title      String
+  message    String?
+  link       String?  // 可跳转的链接
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Series {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @default("")
+  icon        String   @default("📚")
+  coverImage  String?
+  authorId    String   @map("author_id")
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  author User  @relation(fields: [authorId], references: [id])
+  docs   Doc[]
+
+  @@map("series")
+}
+
+model Doc {
+  id        String   @id @default(cuid())
+  seriesId  String   @map("series_id")
+  parentId  String?  @map("parent_id")
+  title     String
+  slug      String
+  type      String   @default("doc")
+  content   String   @default("")
+  order     Int      @default(0)
+  template  String   @default("blank")
+  articleId String?  @map("article_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  parent   Doc?   @relation("DocTree", fields: [parentId], references: [id])
+  children Doc[]  @relation("DocTree")
+
+  @@unique([seriesId, slug])
+  @@map("docs")
+}
